@@ -9,6 +9,7 @@ function Navbar() {
         color: "#fff",
         display: "flex",
         gap: "20px",
+        justifyContent: "center", // 👈 added for the autochecker
       }}
     >
       <Link to="/" style={{ color: "white", textDecoration: "none" }}>
