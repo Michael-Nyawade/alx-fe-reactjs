@@ -1,47 +1,40 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link,
-  useParams,
-} from "react-router-dom";
-import AddRecipeForm from "./components/AddRecipeForm";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import RecipeList from "./components/RecipeList";
 import RecipeDetails from "./components/RecipeDetails";
+import EditRecipeForm from "./components/EditRecipeForm";
+import FavoritesList from "./components/FavoritesList";
+import RecommendationsList from "./components/RecommendationsList";
 import SearchBar from "./components/SearchBar";
 
-function App() {
+const App = () => {
   return (
     <Router>
       <div style={{ padding: "20px" }}>
-        <h1>Recipe Sharing App</h1>
-
+        {/* Navigation */}
         <nav style={{ marginBottom: "20px" }}>
-          <Link to="/">Home</Link>
+          <Link to="/" style={{ marginRight: "10px" }}>
+            Recipes
+          </Link>
+          <Link to="/favorites" style={{ marginRight: "10px" }}>
+            Favorites
+          </Link>
+          <Link to="/recommendations">Recommendations</Link>
         </nav>
 
+        {/* Global Search */}
+        <SearchBar />
+
+        {/* Routes */}
         <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <AddRecipeForm />
-                <SearchBar />
-                <RecipeList />
-              </>
-            }
-          />
-          <Route path="/recipes/:id" element={<RecipeDetailsWrapper />} />
+          <Route path="/" element={<RecipeList />} />
+          <Route path="/recipe/:id" element={<RecipeDetails />} />
+          <Route path="/edit/:id" element={<EditRecipeForm />} />
+          <Route path="/favorites" element={<FavoritesList />} />
+          <Route path="/recommendations" element={<RecommendationsList />} />
         </Routes>
       </div>
     </Router>
   );
-}
-
-// Wrapper to extract recipeId from URL params
-function RecipeDetailsWrapper() {
-  const { id } = useParams();
-  return <RecipeDetails recipeId={id} />;
-}
+};
 
 export default App;
