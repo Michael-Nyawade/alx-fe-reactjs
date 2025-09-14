@@ -8,6 +8,7 @@ import {
 import AddRecipeForm from "./components/AddRecipeForm";
 import RecipeList from "./components/RecipeList";
 import RecipeDetails from "./components/RecipeDetails";
+import SearchBar from "./components/SearchBar";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             element={
               <>
                 <AddRecipeForm />
+                <SearchBar />
                 <RecipeList />
               </>
             }
