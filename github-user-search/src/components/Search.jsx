@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { searchUsers } from "../services/githubService";
+import { fetchUserData, searchUsers } from "../services/githubService";
 
 function Search() {
   const [username, setUsername] = useState("");
@@ -16,11 +16,17 @@ function Search() {
     setResults([]);
 
     try {
-      const data = await searchUsers({ username, location, minRepos });
-      if (data.length === 0) {
-        setError("Looks like we cant find the user");
+      // ✅ Use fetchUserData when only username is provided
+      if (username && !location && !minRepos) {
+        const singleUser = await fetchUserData(username);
+        setResults([singleUser]); // wrap in array so UI still works
       } else {
-        setResults(data);
+        const data = await searchUsers({ username, location, minRepos });
+        if (data.length === 0) {
+          setError("Looks like we cant find the user");
+        } else {
+          setResults(data);
+        }
       }
     } catch (err) {
       setError("Looks like we cant find the user");
