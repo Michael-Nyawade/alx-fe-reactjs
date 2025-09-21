@@ -16,7 +16,7 @@ function Search() {
     setResults([]);
 
     try {
-      // ✅ Use fetchUserData when only username is provided
+      // Use fetchUserData when only username is provided
       if (username && !location && !minRepos) {
         const singleUser = await fetchUserData(username);
         setResults([singleUser]); // wrap in array so UI still works
