@@ -4,7 +4,7 @@ export default function HomePage() {
   const [recipes, setRecipes] = useState([]);
 
   useEffect(() => {
-    // Fetch data from the static JSON file
+    // Fetch mock recipe data from the JSON file
     fetch("/src/data.json")
       .then((res) => res.json())
       .then((data) => setRecipes(data))
@@ -17,7 +17,8 @@ export default function HomePage() {
         🍽️ Recipe Sharing Platform
       </h1>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Responsive grid layout */}
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {recipes.map((recipe) => (
           <div
             key={recipe.id}
