@@ -9,8 +9,8 @@ export default function RecipeDetail() {
     fetch("/src/data.json")
       .then((res) => res.json())
       .then((data) => {
-        const foundRecipe = data.find((item) => item.id === parseInt(id));
-        setRecipe(foundRecipe);
+        const selected = data.find((item) => item.id === parseInt(id));
+        setRecipe(selected);
       })
       .catch((err) => console.error("Error loading recipe:", err));
   }, [id]);
@@ -25,49 +25,43 @@ export default function RecipeDetail() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-3xl mx-auto bg-white shadow-md rounded-2xl overflow-hidden">
+      <Link
+        to="/"
+        className="text-blue-600 hover:underline text-sm font-medium mb-6 inline-block"
+      >
+        ← Back to Home
+      </Link>
+
+      <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-md overflow-hidden">
         <img
           src={recipe.image}
           alt={recipe.title}
           className="w-full h-64 object-cover"
         />
         <div className="p-6">
-          <h1 className="text-3xl font-bold text-blue-600 mb-4">
+          <h1 className="text-3xl font-bold text-gray-800 mb-4">
             {recipe.title}
           </h1>
 
-          <p className="text-gray-700 mb-6">{recipe.summary}</p>
+          {/* Ingredients Section */}
+          <h2 className="text-2xl font-semibold text-gray-700 mb-2">
+            Ingredients
+          </h2>
+          <ul className="list-disc list-inside text-gray-600 mb-6">
+            {recipe.ingredients.map((item, index) => (
+              <li key={index}>{item}</li>
+            ))}
+          </ul>
 
-          {/* Example Ingredients Section */}
-          <div className="mb-6">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-              Ingredients
-            </h2>
-            <ul className="list-disc list-inside text-gray-700 space-y-1">
-              <li>Ingredient 1</li>
-              <li>Ingredient 2</li>
-              <li>Ingredient 3</li>
-            </ul>
-          </div>
-
-          {/* Example Instructions Section */}
-          <div>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-              Instructions
-            </h2>
-            <ol className="list-decimal list-inside text-gray-700 space-y-1">
-              <li>Step 1: Prepare all ingredients.</li>
-              <li>Step 2: Cook according to recipe directions.</li>
-              <li>Step 3: Serve and enjoy!</li>
-            </ol>
-          </div>
-
-          <Link
-            to="/"
-            className="inline-block mt-6 text-blue-600 font-medium hover:underline"
-          >
-            ← Back to Home
-          </Link>
+          {/* Instructions Section */}
+          <h2 className="text-2xl font-semibold text-gray-700 mb-2">
+            Instructions
+          </h2>
+          <ol className="list-decimal list-inside text-gray-600 space-y-2">
+            {recipe.instructions.map((step, index) => (
+              <li key={index}>{step}</li>
+            ))}
+          </ol>
         </div>
       </div>
     </div>
