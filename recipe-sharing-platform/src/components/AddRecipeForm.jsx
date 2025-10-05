@@ -4,18 +4,18 @@ export default function AddRecipeForm() {
   const [title, setTitle] = useState("");
   const [ingredients, setIngredients] = useState("");
   const [instructions, setInstructions] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // Validation function
+  const validate = () => {
+    const newErrors = {};
 
-    // Validation
-    if (!title.trim() || !ingredients.trim() || !instructions.trim()) {
-      setError("All fields are required.");
-      setSuccess(false);
-      return;
-    }
+    if (!title.trim()) newErrors.title = "Title is required.";
+    if (!ingredients.trim())
+      newErrors.ingredients = "Ingredients are required.";
+    if (!instructions.trim())
+      newErrors.instructions = "Instructions are required.";
 
     const ingredientList = ingredients
       .split(",")
@@ -23,7 +23,17 @@ export default function AddRecipeForm() {
       .filter((item) => item !== "");
 
     if (ingredientList.length < 2) {
-      setError("Please include at least two ingredients.");
+      newErrors.ingredients = "Please include at least two ingredients.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!validate()) {
       setSuccess(false);
       return;
     }
@@ -31,7 +41,10 @@ export default function AddRecipeForm() {
     const newRecipe = {
       id: Date.now(),
       title,
-      ingredients: ingredientList,
+      ingredients: ingredients
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean),
       instructions: instructions
         .split(".")
         .map((s) => s.trim())
@@ -39,11 +52,11 @@ export default function AddRecipeForm() {
     };
 
     console.log("New Recipe Submitted:", newRecipe);
-    setError("");
     setSuccess(true);
     setTitle("");
     setIngredients("");
     setInstructions("");
+    setErrors({});
   };
 
   return (
@@ -54,7 +67,7 @@ export default function AddRecipeForm() {
         </h1>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Recipe Title */}
+          {/* Title */}
           <div>
             <label
               htmlFor="title"
@@ -70,6 +83,9 @@ export default function AddRecipeForm() {
               className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter recipe title"
             />
+            {errors.title && (
+              <p className="text-red-600 text-sm mt-1">{errors.title}</p>
+            )}
           </div>
 
           {/* Ingredients */}
@@ -78,7 +94,7 @@ export default function AddRecipeForm() {
               htmlFor="ingredients"
               className="block text-gray-700 font-medium mb-2"
             >
-              Ingredients (separated by commas)
+              Ingredients (comma-separated)
             </label>
             <textarea
               id="ingredients"
@@ -88,6 +104,9 @@ export default function AddRecipeForm() {
               className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="e.g. Eggs, Milk, Flour"
             ></textarea>
+            {errors.ingredients && (
+              <p className="text-red-600 text-sm mt-1">{errors.ingredients}</p>
+            )}
           </div>
 
           {/* Instructions */}
@@ -106,12 +125,14 @@ export default function AddRecipeForm() {
               className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Describe the preparation steps..."
             ></textarea>
+            {errors.instructions && (
+              <p className="text-red-600 text-sm mt-1">{errors.instructions}</p>
+            )}
           </div>
 
-          {/* Error Message */}
-          {error && <p className="text-red-600 text-sm">{error}</p>}
+          {/* Success Message */}
           {success && (
-            <p className="text-green-600 text-sm">
+            <p className="text-green-600 text-sm mt-2 text-center">
               Recipe submitted successfully!
             </p>
           )}
