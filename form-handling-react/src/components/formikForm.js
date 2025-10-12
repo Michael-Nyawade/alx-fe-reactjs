@@ -1,10 +1,9 @@
-// src/components/formikForm.js
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 const RegistrationSchema = Yup.object().shape({
-  username: Yup.string().trim().required("Username is required"),
+  username: Yup.string().required("Username is required"),
   email: Yup.string().email("Invalid email").required("Email is required"),
   password: Yup.string()
     .min(6, "Password must be at least 6 characters")
@@ -14,7 +13,7 @@ const RegistrationSchema = Yup.object().shape({
 export default function FormikForm() {
   const initialValues = { username: "", email: "", password: "" };
 
-  const submitToMockApi = async (
+  const handleSubmit = async (
     values,
     { setSubmitting, resetForm, setStatus }
   ) => {
@@ -48,7 +47,7 @@ export default function FormikForm() {
       <Formik
         initialValues={initialValues}
         validationSchema={RegistrationSchema}
-        onSubmit={submitToMockApi}
+        onSubmit={handleSubmit}
       >
         {({ isSubmitting, status }) => (
           <Form noValidate>
