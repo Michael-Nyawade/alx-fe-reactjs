@@ -10,17 +10,23 @@ export default function RegistrationForm() {
 
   const validate = () => {
     const newErrors = {};
-    if (!username.trim()) newErrors.username = "Username is required";
-    if (!email.trim()) {
+
+    if (!username) {
+      newErrors.username = "Username is required";
+    }
+
+    if (!email) {
       newErrors.email = "Email is required";
     } else if (!/^\S+@\S+\.\S+$/.test(email)) {
       newErrors.email = "Invalid email format";
     }
+
     if (!password) {
       newErrors.password = "Password is required";
     } else if (password.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
     }
+
     return newErrors;
   };
 
@@ -51,7 +57,6 @@ export default function RegistrationForm() {
         text: `User registered (id: ${data.id || "mocked"})`,
       });
 
-      // clear form
       setUsername("");
       setEmail("");
       setPassword("");
