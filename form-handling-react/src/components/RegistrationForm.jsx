@@ -1,40 +1,33 @@
-// src/components/RegistrationForm.jsx
 import React, { useState } from "react";
 
 export default function RegistrationForm() {
-  const [form, setForm] = useState({ username: "", email: "", password: "" });
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  function validate(values) {
-    const errs = {};
-    if (!values.username.trim()) errs.username = "Username is required";
-    if (!values.email.trim()) {
-      errs.email = "Email is required";
-    } else if (!/^\S+@\S+\.\S+$/.test(values.email)) {
-      errs.email = "Email is invalid";
+  const validate = () => {
+    const newErrors = {};
+    if (!username.trim()) newErrors.username = "Username is required";
+    if (!email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+      newErrors.email = "Invalid email format";
     }
-    if (!values.password) {
-      errs.password = "Password is required";
-    } else if (values.password.length < 6) {
-      errs.password = "Password must be at least 6 characters";
+    if (!password) {
+      newErrors.password = "Password is required";
+    } else if (password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
     }
-    return errs;
-  }
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-    // clear related error as user types
-    setErrors((prev) => ({ ...prev, [name]: undefined }));
-    setMessage(null);
+    return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = validate(form);
-    if (Object.keys(validationErrors).length) {
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
@@ -44,15 +37,10 @@ export default function RegistrationForm() {
     setMessage(null);
 
     try {
-      // mock API endpoint — jsonplaceholder accepts POST and returns created resource
       const res = await fetch("https://jsonplaceholder.typicode.com/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: form.username,
-          email: form.email,
-          password: form.password, // note: never send plaintext in real apps
-        }),
+        body: JSON.stringify({ username, email, password }),
       });
 
       if (!res.ok) throw new Error(`Server responded ${res.status}`);
@@ -62,7 +50,11 @@ export default function RegistrationForm() {
         type: "success",
         text: `User registered (id: ${data.id || "mocked"})`,
       });
-      setForm({ username: "", email: "", password: "" });
+
+      // clear form
+      setUsername("");
+      setEmail("");
+      setPassword("");
     } catch (err) {
       setMessage({ type: "error", text: err.message || "Registration failed" });
     } finally {
@@ -78,9 +70,13 @@ export default function RegistrationForm() {
         <label style={{ display: "block", marginBottom: 8 }}>
           Username
           <input
+            type="text"
             name="username"
-            value={form.username}
-            onChange={handleChange}
+            value={username}
+            onChange={(e) => {
+              setUsername(e.target.value);
+              setErrors((prev) => ({ ...prev, username: undefined }));
+            }}
             style={{
               display: "block",
               width: "100%",
@@ -89,17 +85,20 @@ export default function RegistrationForm() {
             }}
           />
           {errors.username && (
-            <div style={{ color: "red", marginTop: 6 }}>{errors.username}</div>
+            <div style={{ color: "red" }}>{errors.username}</div>
           )}
         </label>
 
         <label style={{ display: "block", marginBottom: 8 }}>
           Email
           <input
-            name="email"
-            value={form.email}
-            onChange={handleChange}
             type="email"
+            name="email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setErrors((prev) => ({ ...prev, email: undefined }));
+            }}
             style={{
               display: "block",
               width: "100%",
@@ -107,18 +106,19 @@ export default function RegistrationForm() {
               marginTop: 6,
             }}
           />
-          {errors.email && (
-            <div style={{ color: "red", marginTop: 6 }}>{errors.email}</div>
-          )}
+          {errors.email && <div style={{ color: "red" }}>{errors.email}</div>}
         </label>
 
         <label style={{ display: "block", marginBottom: 8 }}>
           Password
           <input
-            name="password"
-            value={form.password}
-            onChange={handleChange}
             type="password"
+            name="password"
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setErrors((prev) => ({ ...prev, password: undefined }));
+            }}
             style={{
               display: "block",
               width: "100%",
@@ -127,7 +127,7 @@ export default function RegistrationForm() {
             }}
           />
           {errors.password && (
-            <div style={{ color: "red", marginTop: 6 }}>{errors.password}</div>
+            <div style={{ color: "red" }}>{errors.password}</div>
           )}
         </label>
 
