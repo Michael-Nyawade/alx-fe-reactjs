@@ -1,4 +1,4 @@
-// src/pages/Home.jsx
+// src/components/Home.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -8,7 +8,7 @@ function Home() {
       <h1>Home Page</h1>
       <nav>
         <Link to="/about">About</Link> | <Link to="/profile">Profile</Link> |{" "}
-        <Link to="/posts/1">Post 1</Link>
+        <Link to="/blog/1">Blog Post 1</Link> {/* ✅ updated link */}
       </nav>
     </div>
   );

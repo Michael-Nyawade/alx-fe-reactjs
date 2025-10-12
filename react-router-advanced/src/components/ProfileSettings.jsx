@@ -1,4 +1,4 @@
-// src/pages/ProfileSettings.jsx
+// src/components/ProfileSettings.jsx
 import React from "react";
 
 function ProfileSettings() {
